@@ -5,6 +5,7 @@ var mouseTarget;	// the display object currently under the mouse, or being dragg
 var dragStarted;	// indicates whether we are currently in a drag operation
 var offset;
 var update = true;
+var elements = [];
 
 function init() {
 	// examples.showDistractor();
@@ -48,8 +49,8 @@ function handleImageLoad(event) {
 	// create and populate the screen with random daisies:
 	bitmap = new createjs.Bitmap(image);
 	container.addChild(bitmap);
-	bitmap.x = canvas.width * Math.random() | 0;
-	bitmap.y = canvas.height * Math.random() | 0;
+	bitmap.x = 40;
+	bitmap.y = 545;
 	bitmap.regX = bitmap.image.width / 2 | 0;
 	bitmap.regY = bitmap.image.height / 2 | 0;
 	bitmap.scaleX = bitmap.scaleY = bitmap.scale = 0.1;
@@ -58,14 +59,38 @@ function handleImageLoad(event) {
 	// using "on" binds the listener to the scope of the currentTarget by default
 	// in this case that means it executes in the scope of the button.
 	bitmap.on("mousedown", function (evt) {
+    console.log(elements);
+    var imageDup = new Image();
+  	imageDup.src = this.image.src;
+  	imageDup.onload = handleImageLoad;
 		this.parent.addChild(this);
 		this.offset = {x: this.x - evt.stageX, y: this.y - evt.stageY};
 	});
 
-	// the pressmove event is dispatched when the mouse moves after a mousedown on the target until the mouse is released.
-	bitmap.on("pressmove", function (evt) {
+  bitmap.on("pressup", function (evt) {
     console.log(evt.stageX);
     console.log(evt.stageY);
+
+
+    elements.forEach(element => {
+
+
+
+      if (this !== element && !(element.x - 10 > this.x + 10 ||
+           element.x + 10 < this.x - 10 ||
+           element.y - 10 > this.y + 10 ||
+           element.y + 10 < this.y - 10)) {
+
+             stage.removeChild(this.parent);
+             stage.removeChild(element.parent);
+        }
+    });
+  });
+
+	// the pressmove event is dispatched when the mouse moves after a mousedown on the target until the mouse is released.
+	bitmap.on("pressmove", function (evt) {
+    console.log(this.x);
+    console.log(this.y);
     if(this.y < 465) {
       if(evt.stageY < 465) {
         this.y = evt.stageY + this.offset.y;
@@ -79,6 +104,7 @@ function handleImageLoad(event) {
 		update = true;
 	});
 
+
 	bitmap.on("rollover", function (evt) {
 		this.scaleX = this.scaleY = this.scale * 1.2;
 		update = true;
@@ -88,7 +114,7 @@ function handleImageLoad(event) {
 		this.scaleX = this.scaleY = this.scale;
 		update = true;
 	});
-
+  elements.push(bitmap);
 	createjs.Ticker.addEventListener("tick", tick);
 }
 

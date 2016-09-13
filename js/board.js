@@ -50,8 +50,8 @@ function handleImageLoad(event) {
   var image = event.target;
 	var bitmap;
 	var container = new createjs.Container();
-	stage.addChild(container);
 	bitmap = new createjs.Bitmap(image);
+	stage.addChild(container);
 	container.addChild(bitmap);
 	bitmap.x = this.x || 40 + elOffset;
   !this.x ? elOffset += 75 : null;
@@ -63,10 +63,11 @@ function handleImageLoad(event) {
 	bitmap.cursor = "pointer";
 	bitmap.name = this.name;
 	console.log(bitmap.name);
-  discovered.push(image);
+	if(discovered.every(el => el.name !== bitmap.name)) {
+		discovered.push(bitmap);
+	}
   console.log(discovered);
-	// using "on" binds the listener to the scope of the currentTarget by default
-	// in this case that means it executes in the scope of the button.
+
 	bitmap.on("mousedown", function (evt) {
 
     if(evt.currentTarget.y > 465 ) {
@@ -88,10 +89,19 @@ function handleImageLoad(event) {
                                   element.x + 10 < this.x - 10 ||
                                   element.y - 10 > this.y + 10 ||
                                   element.y + 10 < this.y - 10)) {
-         stage.removeChild(this.parent);
-         stage.removeChild(element.parent);
-         toRemove.push(element);
-         toRemove.push(this);
+				 let combined = la.combine(this.name, elements[i].name);
+				 if (combined !== undefined) {
+					 var discoveredEl = new Image();
+					 discoveredEl.src = `./img/${combined}.png`;
+					 if(discovered.every(el => el.image.src !== discoveredEl.src)) {
+						 let elObj = {name: combined};
+						 discoveredEl.onload = handleImageLoad.bind(elObj);
+					 }
+				 }
+				 stage.removeChild(this.parent);
+				 stage.removeChild(element.parent);
+				 toRemove.push(element);
+				 toRemove.push(this);
         }
       }
       elements = elements.filter((el) => {

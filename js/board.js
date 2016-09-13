@@ -1,14 +1,18 @@
+const Element = require('./element.js');
+
 var canvas, stage;
 
 var mouseTarget;	// the display object currently under the mouse, or being dragged
 var dragStarted;	// indicates whether we are currently in a drag operation
 var offset;
 var update = true;
+var initial = ["fire", "water", "earth", "plant"];
+var discovered = [];
 var elements = [];
+var elOffset = 0;
 
-function init() {
-	// examples.showDistractor();
-	// create stage and point it to the canvas:
+document.addEventListener("DOMContentLoaded", function() {
+
 	canvas = document.getElementById("bodyCanvas");
 	stage = new createjs.Stage(canvas);
 
@@ -16,9 +20,6 @@ function init() {
 	stage.enableMouseOver(10);
 	stage.mouseMoveOutside = true; // keep tracking the mouse even when it leaves the canvas
 
-  var image = new Image();
-	image.src = "./img/fire.png";
-	image.onload = handleImageLoad;
 
   const line = new createjs.Shape();
 
@@ -29,28 +30,38 @@ function init() {
   line.graphics.endStroke();
 
   stage.addChild(line);
-}
+
+  initial.forEach(el => {
+    let image = new Image();
+		image.src = `./img/${el}.png`;
+    image.onload = handleImageLoad;
+  });
+
+  stage.update();
+});
 
 function stop() {
 	createjs.Ticker.removeEventListener("tick", tick);
 }
 
 function handleImageLoad(event) {
-	var image = event.target;
+  var image = event.target;
 	var bitmap;
 	var container = new createjs.Container();
 	stage.addChild(container);
 
-	// create and populate the screen with random daisies:
 	bitmap = new createjs.Bitmap(image);
 	container.addChild(bitmap);
-	bitmap.x = 40;
+	bitmap.x = this.x || 40 + elOffset;
+  !this.x ? elOffset += 75 : null;
+  console.log(elOffset);
 	bitmap.y = 545;
-	bitmap.regX = bitmap.image.width / 2 | 0;
-	bitmap.regY = bitmap.image.height / 2 | 0;
+	bitmap.regX = bitmap.width / 2 | 0;
+	bitmap.regY = bitmap.height / 2 | 0;
 	bitmap.scaleX = bitmap.scaleY = bitmap.scale = 0.1;
 	bitmap.cursor = "pointer";
-
+  discovered.push(image);
+  console.log(discovered);
 	// using "on" binds the listener to the scope of the currentTarget by default
 	// in this case that means it executes in the scope of the button.
 	bitmap.on("mousedown", function (evt) {
@@ -58,15 +69,15 @@ function handleImageLoad(event) {
     if(evt.currentTarget.y > 465 ) {
       var imageDup = new Image();
       imageDup.src = this.image.src;
-      imageDup.onload = handleImageLoad;
+      imageDup.onload = handleImageLoad.bind(this);
       this.parent.addChild(this);
       this.offset = {x: this.x - evt.stageX, y: this.y - evt.stageY};
     }
 	});
 
   bitmap.on("pressup", function (evt) {
+    elements.push(bitmap);
     if(this.y < 465 ) {
-      elements.push(bitmap);
       let toRemove = [];
       for (var i = 0; i < elements.length; i++) {
         let element = elements[i];
@@ -74,11 +85,11 @@ function handleImageLoad(event) {
                                   element.x + 10 < this.x - 10 ||
                                   element.y - 10 > this.y + 10 ||
                                   element.y + 10 < this.y - 10)) {
-             stage.removeChild(this.parent);
-             stage.removeChild(element.parent);
-             toRemove.push(element);
-             toRemove.push(this);
-          }
+         stage.removeChild(this.parent);
+         stage.removeChild(element.parent);
+         toRemove.push(element);
+         toRemove.push(this);
+        }
       }
       elements = elements.filter((el) => {
         return !(toRemove.includes(el));

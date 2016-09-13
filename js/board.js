@@ -1,4 +1,5 @@
 const Element = require('./element.js');
+const la = require('little-alchemy');
 
 var canvas, stage;
 
@@ -6,13 +7,13 @@ var mouseTarget;	// the display object currently under the mouse, or being dragg
 var dragStarted;	// indicates whether we are currently in a drag operation
 var offset;
 var update = true;
-var initial = ["fire", "water", "earth", "plant"];
+var initial = ["fire", "water", "earth", "wind"];
 var discovered = [];
 var elements = [];
 var elOffset = 0;
 
-document.addEventListener("DOMContentLoaded", function() {
 
+document.addEventListener("DOMContentLoaded", function() {
 	canvas = document.getElementById("bodyCanvas");
 	stage = new createjs.Stage(canvas);
 
@@ -34,7 +35,8 @@ document.addEventListener("DOMContentLoaded", function() {
   initial.forEach(el => {
     let image = new Image();
 		image.src = `./img/${el}.png`;
-    image.onload = handleImageLoad;
+		let elObj = {name: el};
+    image.onload = handleImageLoad.bind(elObj);
   });
 
   stage.update();
@@ -49,7 +51,6 @@ function handleImageLoad(event) {
 	var bitmap;
 	var container = new createjs.Container();
 	stage.addChild(container);
-
 	bitmap = new createjs.Bitmap(image);
 	container.addChild(bitmap);
 	bitmap.x = this.x || 40 + elOffset;
@@ -60,6 +61,8 @@ function handleImageLoad(event) {
 	bitmap.regY = bitmap.height / 2 | 0;
 	bitmap.scaleX = bitmap.scaleY = bitmap.scale = 0.1;
 	bitmap.cursor = "pointer";
+	bitmap.name = this.name;
+	console.log(bitmap.name);
   discovered.push(image);
   console.log(discovered);
 	// using "on" binds the listener to the scope of the currentTarget by default

@@ -1,4 +1,3 @@
-import Element from './element.js';
 
 var canvas, stage;
 
@@ -14,9 +13,17 @@ function init() {
 	canvas = document.getElementById("bodyCanvas");
 	stage = new createjs.Stage(canvas);
 
+	// enable touch interactions if supported on the current device:
 	createjs.Touch.enable(stage);
+
+	// enabled mouse over / out events
 	stage.enableMouseOver(10);
 	stage.mouseMoveOutside = true; // keep tracking the mouse even when it leaves the canvas
+
+	// load the source image:
+	var image = new Image();
+	image.src = "./img/fire.png";
+	image.onload = handleImageLoad;
 
   const line = new createjs.Shape();
 

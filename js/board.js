@@ -1,5 +1,3 @@
-import Element from './element.js';
-
 var canvas, stage;
 
 var mouseTarget;	// the display object currently under the mouse, or being dragged
@@ -17,6 +15,10 @@ function init() {
 	createjs.Touch.enable(stage);
 	stage.enableMouseOver(10);
 	stage.mouseMoveOutside = true; // keep tracking the mouse even when it leaves the canvas
+
+  var image = new Image();
+	image.src = "./img/fire.png";
+	image.onload = handleImageLoad;
 
   const line = new createjs.Shape();
 

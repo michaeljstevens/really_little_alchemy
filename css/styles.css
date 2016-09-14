@@ -11,7 +11,6 @@
 body{ background-color: ivory; }
 
 .wrapper {
-    margin-top: 50px;
     border: 10px solid blue;
     top:10px;
     left:10px;
@@ -20,6 +19,7 @@ body{ background-color: ivory; }
     overflow: hidden;
     background-color:white;
     position: relative;
+    margin-top: 72px;
 }
 .vertical-scroll {
   border: 1px solid black;
@@ -55,4 +55,11 @@ body{ background-color: ivory; }
 .about:hover {
   padding: 12px;
   cursor: pointer;
+}
+
+.header {
+  font-size: 54px;
+  font-family: fantasy;
+  position: absolute;
+  margin: 0px;
 }

@@ -47,14 +47,18 @@
 	const Element = __webpack_require__(1);
 	const la = __webpack_require__(4);
 
+
 	var canvas, stage;
 
 	var mouseTarget;
 	var dragStarted;
 	var offset;
 	var update = true;
-	var initial = ["fire", "water", "earth", "air"]
-	// , "brick", "cloud", "dust", "steam", "swamp", "tobacco", "gunpowder", "rain"];
+	var initial = ["fire", "water", "earth", "air",
+	 "brick", "cloud", "dust", "steam", "swamp", "tobacco", "gunpowder", "rain",
+	 "fire", "water", "earth", "air",
+	  "brick", "cloud", "dust", "steam", "swamp", "tobacco", "gunpowder", "rain",
+	"brick", "cloud", "dust", "steam", "swamp", "tobacco", "gunpowder", "rain"];
 	var discovered = [];
 	var elements = [];
 	var elOffset = 0;
@@ -65,7 +69,7 @@
 		canvas = document.getElementById("bodyCanvas");
 		stage = new createjs.Stage(canvas);
 
-		createjs.Touch.enable(stage);
+
 		stage.enableMouseOver(10);
 		stage.mouseMoveOutside = true;
 
@@ -78,9 +82,27 @@
 	  line.graphics.lineTo(1000, 500);
 	  line.graphics.endStroke();
 
-	  stage.addChild(line);
+		stage.addChild(line);
+
+		var disContainer = new createjs.Container();
+	 	stage.addChild(disContainer);
+
+		var wrapper;
+		var canvasHeight;
+		var vScrollHeight;
+		var canvasWrapperHeight=300;
+
+		$(".bar").draggable({
+			containment: "parent"
+		});
+
+		$(".bar").on("drag", function (event, ui) {
+			stage.children[1].y = 0 - ui.position.top;
+			stage.update();
+		});
 
 
+		stage.update();
 
 	  initial.forEach(el => {
 	    let image = new Image();
@@ -89,7 +111,6 @@
 	    image.onload = handleImageLoad.bind(elObj);
 	  });
 
-	  stage.update();
 	});
 
 	function stop() {
@@ -101,7 +122,8 @@
 		var bitmap;
 		var container = new createjs.Container();
 		bitmap = new createjs.Bitmap(image);
-		stage.addChild(container);
+
+		stage.children[1].addChild(container);
 		container.addChild(bitmap);
 		bitmap.x = this.x || 40 + elOffset;
 		bitmap.y = this.y || yCoord;
@@ -174,8 +196,8 @@
 							 discoveredEl.onload = handleImageLoad.bind(elObj);
 						 }
 					 }
-					 stage.removeChild(this.parent);
-					 stage.removeChild(element.parent);
+					 stage.children[1].removeChild(this.parent);
+					 stage.children[1].removeChild(element.parent);
 					 toRemove.push(element);
 					 toRemove.push(this);
 	        }
@@ -184,7 +206,7 @@
 	        return !(toRemove.includes(el));
 	      });
 	    } else {
-	      stage.removeChild(this.parent);
+	      stage.children[1].removeChild(this.parent);
 	    }
 	    update = true;
 	  });

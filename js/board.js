@@ -3,14 +3,16 @@ const la = require('little-alchemy');
 
 var canvas, stage;
 
-var mouseTarget;	// the display object currently under the mouse, or being dragged
-var dragStarted;	// indicates whether we are currently in a drag operation
+var mouseTarget;
+var dragStarted;
 var offset;
 var update = true;
-var initial = ["fire", "water", "earth", "wind"];
+var initial = ["fire", "water", "earth", "air"]
+// , "brick", "cloud", "dust", "steam", "swamp", "tobacco", "gunpowder", "rain"];
 var discovered = [];
 var elements = [];
 var elOffset = 0;
+var yCoord = 520;
 
 
 document.addEventListener("DOMContentLoaded", function() {
@@ -19,7 +21,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 	createjs.Touch.enable(stage);
 	stage.enableMouseOver(10);
-	stage.mouseMoveOutside = true; // keep tracking the mouse even when it leaves the canvas
+	stage.mouseMoveOutside = true;
 
 
   const line = new createjs.Shape();
@@ -31,6 +33,8 @@ document.addEventListener("DOMContentLoaded", function() {
   line.graphics.endStroke();
 
   stage.addChild(line);
+
+
 
   initial.forEach(el => {
     let image = new Image();
@@ -54,19 +58,44 @@ function handleImageLoad(event) {
 	stage.addChild(container);
 	container.addChild(bitmap);
 	bitmap.x = this.x || 40 + elOffset;
-  !this.x ? elOffset += 75 : null;
+	bitmap.y = this.y || yCoord;
   console.log(elOffset);
-	bitmap.y = 545;
+	console.log(yCoord);
 	bitmap.regX = bitmap.width / 2 | 0;
 	bitmap.regY = bitmap.height / 2 | 0;
-	bitmap.scaleX = bitmap.scaleY = bitmap.scale = 0.1;
-	bitmap.cursor = "pointer";
 	bitmap.name = this.name;
+	bitmap.scaleX = bitmap.scaleY = bitmap.scale = .5;
+	bitmap.cursor = "pointer";
+
+	var text = new createjs.Text(this.name, "18px Arial", "#ff7700");
+	text.y = this.y + 55 || yCoord + 55;
+	text.x = bitmap.x + 5;
+	container.addChild(text);
+
 	console.log(bitmap.name);
+	if (!this.x) {
+		if (elOffset > 700) {
+			elOffset = 0;
+			yCoord += 100;
+		} else {
+			elOffset += 100;
+		}
+	}
+
 	if(discovered.every(el => el.name !== bitmap.name)) {
 		discovered.push(bitmap);
 	}
-  console.log(discovered);
+
+	stage.children.forEach(child => {
+		if (child.name === "foundCount") {
+			stage.removeChild(child);
+		}
+	});
+
+	var foundCount = new createjs.Text(`${discovered.length}/100`, "72px Sans-Serif", "#ff7700");
+	foundCount.name = "foundCount";
+	stage.addChild(foundCount);
+
 
 	bitmap.on("mousedown", function (evt) {
 
@@ -91,6 +120,7 @@ function handleImageLoad(event) {
                                   element.y + 10 < this.y - 10)) {
 				 let combined = la.combine(this.name, elements[i].name);
 				 if (combined !== undefined) {
+					 combined = combined[0];
 					 var discoveredEl = new Image();
 					 discoveredEl.src = `./img/${combined}.png`;
 					 if(discovered.every(el => el.image.src !== discoveredEl.src)) {
@@ -113,7 +143,6 @@ function handleImageLoad(event) {
     update = true;
   });
 
-	// the pressmove event is dispatched when the mouse moves after a mousedown on the target until the mouse is released.
 	bitmap.on("pressmove", function (evt) {
 
     if(this.y < 465) {
@@ -125,7 +154,6 @@ function handleImageLoad(event) {
       this.x = evt.stageX + this.offset.x;
       this.y = evt.stageY + this.offset.y;
     }
-		// indicate that the stage should be updated on the next tick:
 		update = true;
 	});
 
@@ -143,9 +171,8 @@ function handleImageLoad(event) {
 }
 
 function tick(event) {
-	// this set makes it so the stage only re-renders when an event handler indicates a change has happened.
 	if (update) {
-		update = false; // only update once
+		update = false;
 		stage.update(event);
 	}
 }

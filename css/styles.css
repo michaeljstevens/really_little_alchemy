@@ -1,8 +1,42 @@
 #bodyCanvas {
-  border: 1px solid black;
 }
 
 .main {
+  width: 100%;
+  height: 100%;
   display: flex;
   justify-content: center;
+}
+
+body{ background-color: ivory; }
+
+.wrapper {
+    margin-top: 100px;
+    border: 10px solid blue;
+    top:10px;
+    left:10px;
+    width: 1000px;
+    height: 750px;
+    overflow: hidden;
+    background-color:white;
+    position: relative;
+}
+.vertical-scroll {
+  border: 1px solid black;
+  width: 20px;
+  height: 236px;
+  position: absolute;
+  bottom: 5px;
+  right: 7px;
+}
+.vertical-scroll div.bar {
+    left:0px;
+    top:0px;
+    width: 20px;
+    background-color: blue;
+    height: 20px;
+}
+#bodyCanvas {
+    left:0px;
+    top:0px;
 }

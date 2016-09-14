@@ -9,52 +9,15 @@
     <script src="http://code.jquery.com/ui/1.10.1/jquery-ui.js"></script>
     <script type="text/javascript" src="./js/bundle.js"></script>
     <link rel="stylesheet" href="./css/styles.css" media="screen" title="no title">
-    <title></title>
-    <style>
-body{ background-color: ivory; }
-div, canvas {
-    position:absolute;
-}
-.wrapper {
-    top:10px;
-    left:10px;
-    width: 1000px;
-    height: 750px;
-    border: 2px solid black;
-    margin:30px 0 2;
-    overflow: hidden;
-    background-color:white;
-}
-.vertical-scroll {
-  /* left: 320px; */
-  top: 550px;
-  border: 1px solid green;
-  width: 20px;
-  height: 236px;
-  /* right: -311px; */
-  left: 984px;
-}
-.vertical-scroll div.bar {
-    left:0px;
-    top:0px;
-    width: 20px;
-    background-color: blue;
-    height: 20px;
-}
-#bodyCanvas {
-    left:0px;
-    top:0px;
-}
-
-</style>
+    <title>Really Little Alchemy</title>
   </head>
   <body>
     <div class="main">
       <div class="wrapper" id="wrap1">
         <canvas id="bodyCanvas" width="1000" height="750"></canvas>
-      </div>
-      <div class="vertical-scroll" id="vscroll">
-        <div class="bar" id="vbar"></div>
+        <div class="vertical-scroll" id="vscroll">
+          <div class="bar" id="vbar"></div>
+        </div>
       </div>
     </div>
   </body>

@@ -8,11 +8,20 @@ var mouseTarget;
 var dragStarted;
 var offset;
 var update = true;
-var initial = ["fire", "water", "earth", "air",
- "brick", "cloud", "dust", "steam", "swamp", "tobacco", "gunpowder", "rain",
- "fire", "water", "earth", "air",
-  "brick", "cloud", "dust", "steam", "swamp", "tobacco", "gunpowder", "rain",
-"brick", "cloud", "dust", "steam", "swamp", "tobacco", "gunpowder", "rain"];
+var initial = ["fire", "water", "earth", "air"]
+//  "brick", "cloud", "dust", "steam", "swamp", "tobacco", "gunpowder", "rain",
+//  "fire", "water", "earth", "air",
+//   "brick", "cloud", "dust", "steam", "swamp", "tobacco", "gunpowder", "rain",
+// "brick", "cloud", "dust", "steam", "swamp", "tobacco", "gunpowder", "rain",
+// "brick", "cloud", "dust", "steam", "swamp", "tobacco", "gunpowder", "rain",
+// "brick", "cloud", "dust", "steam", "swamp", "tobacco", "gunpowder", "rain",
+// "brick", "cloud", "dust", "steam", "swamp", "tobacco", "gunpowder", "rain",
+// "brick", "cloud", "dust", "steam", "swamp", "tobacco", "gunpowder", "rain",
+// "brick", "cloud", "dust", "steam", "swamp", "tobacco", "gunpowder", "rain",
+// "brick", "cloud", "dust", "steam", "swamp", "tobacco", "gunpowder", "rain",
+// "brick", "cloud", "dust", "steam", "swamp", "tobacco", "gunpowder", "rain",
+// "brick", "cloud", "dust", "steam", "swamp", "tobacco", "gunpowder", "rain",
+// "brick", "cloud", "dust", "steam", "swamp", "tobacco", "gunpowder", "rain"];
 var discovered = [];
 var elements = [];
 var elOffset = 0;
@@ -22,6 +31,7 @@ var yCoord = 520;
 document.addEventListener("DOMContentLoaded", function() {
 	canvas = document.getElementById("bodyCanvas");
 	stage = new createjs.Stage(canvas);
+
 
 
 	stage.enableMouseOver(10);
@@ -41,6 +51,10 @@ document.addEventListener("DOMContentLoaded", function() {
 	var disContainer = new createjs.Container();
  	stage.addChild(disContainer);
 
+	var mask = new createjs.Shape();
+	mask.graphics.f("#f00").dr(0,500,1000,500);
+	disContainer.mask = mask;
+
 	var wrapper;
 	var canvasHeight;
 	var vScrollHeight;
@@ -51,10 +65,13 @@ document.addEventListener("DOMContentLoaded", function() {
 	});
 
 	$(".bar").on("drag", function (event, ui) {
-		stage.children[1].y = 0 - ui.position.top;
+		stage.children[1].y = 0 - ui.position.top * 4.4;
 		stage.update();
 	});
 
+	var mainContainer = new createjs.Container();
+	stage.addChild(mainContainer);
+	mainContainer.setBounds(0,0,1000,500);
 
 	stage.update();
 
@@ -118,14 +135,16 @@ function handleImageLoad(event) {
 	foundCount.name = "foundCount";
 	stage.addChild(foundCount);
 
+	update = true;
 
 	bitmap.on("mousedown", function (evt) {
 
     if(evt.currentTarget.y > 465 ) {
+			stage.children[2].addChild(bitmap);
       var imageDup = new Image();
       imageDup.src = this.image.src;
       imageDup.onload = handleImageLoad.bind(this);
-      this.parent.addChild(this);
+      // this.parent.addChild(this);
       this.offset = {x: this.x - evt.stageX, y: this.y - evt.stageY};
     }
 	});
@@ -152,6 +171,8 @@ function handleImageLoad(event) {
 				 }
 				 stage.children[1].removeChild(this.parent);
 				 stage.children[1].removeChild(element.parent);
+				 stage.children[2].removeChild(this);
+				 stage.children[2].removeChild(element);
 				 toRemove.push(element);
 				 toRemove.push(this);
         }
@@ -161,6 +182,7 @@ function handleImageLoad(event) {
       });
     } else {
       stage.children[1].removeChild(this.parent);
+			stage.childern[2].removeChild(this);
     }
     update = true;
   });

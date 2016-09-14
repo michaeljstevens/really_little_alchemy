@@ -86,8 +86,8 @@
 
 	  const line = new createjs.Shape();
 
-	  line.graphics.setStrokeStyle(1);
-	  line.graphics.beginStroke("Black");
+	  line.graphics.setStrokeStyle(10);
+	  line.graphics.beginStroke("Blue");
 	  line.graphics.moveTo(0, 500);
 	  line.graphics.lineTo(1000, 500);
 	  line.graphics.endStroke();
@@ -119,6 +119,76 @@
 		stage.addChild(mainContainer);
 		mainContainer.setBounds(0,0,1000,500);
 
+		var aboutModal = new createjs.Shape();
+		aboutModal.graphics.beginFill('ivory');
+		aboutModal.graphics.setStrokeStyle(2,'round').beginStroke('#357EBD');
+		aboutModal.alpha = 1;
+		aboutModal.graphics.drawRect(240, 100, 500, 300);
+		aboutModal.graphics.endFill();
+		stage.addChild(aboutModal);
+		aboutModal.visible = false;
+
+		var modalLabel = new createjs.Text("Really Little Alchemy", "40px Arial", "#000");
+		modalLabel.x = 490;
+		modalLabel.y = 120;
+		modalLabel.textAlign = 'center';
+		modalLabel.lineWidth = 800;
+		modalLabel.lineHeight = 50;
+		stage.addChild(modalLabel);
+		modalLabel.visible = false;
+
+		var modalDescription = new createjs.Text("", "20px Arial", "#000");
+		modalDescription.text = "You're given 4 elements to begin.\
+		Try combining these with themselves and each other to discover new elements!\
+		There are 100 in total. Good luck!"
+		modalDescription.x = 480;
+		modalDescription.y = 200;
+		modalDescription.textAlign = 'center';
+		modalDescription.lineWidth = 300;
+		modalDescription.lineHeight = 20;
+		stage.addChild(modalDescription);
+		modalDescription.visible = false;
+
+		var buttonok = new createjs.Shape();
+		buttonok.graphics.beginFill('lightgrey');
+		buttonok.graphics.setStrokeStyle(2,'round').beginStroke('#357EBD');
+		buttonok.graphics.drawRoundRect(630, 350, 100, 40, 5);
+		buttonok.cursor = "pointer";
+		stage.addChild(buttonok);
+		buttonok.visible = false;
+
+		buttonok.on("click", () => {
+			aboutModal.visible = false;
+			modalLabel.visible = false;
+			modalDescription.visible = false;
+			buttonokLabel.visible = false;
+			buttonok.visible = false;
+			update = true;
+		});
+
+		var buttonokLabel = new createjs.Text("Continue", "20px Arial", "#000");
+		buttonokLabel.x = 640;
+		buttonokLabel.y = 360;
+		modalDescription.lineWidth = 300;
+		modalDescription.lineHeight = 20;
+		stage.addChild(buttonokLabel);
+		buttonokLabel.visible = false;
+
+		$(".about").on("click", () => {
+			aboutModal.visible === true ? aboutModal.visible = false : aboutModal.visible = true;
+			modalLabel.visible === true ? modalLabel.visible = false : modalLabel.visible = true;
+			modalDescription.visible === true ? modalDescription.visible = false : modalDescription.visible = true;
+			buttonok.visible === true ? buttonok.visible = false : buttonok.visible = true;
+			buttonokLabel.visible === true ? buttonokLabel.visible = false : buttonokLabel.visible = true;
+	    stage.setChildIndex(aboutModal, stage.getNumChildren()-1);
+			stage.setChildIndex(modalLabel, stage.getNumChildren()-1);
+			stage.setChildIndex(modalDescription, stage.getNumChildren()-1);
+			stage.setChildIndex(buttonok, stage.getNumChildren()-1);
+			stage.setChildIndex(buttonokLabel, stage.getNumChildren()-1);
+			update = true;
+		});
+
+
 		stage.update();
 
 	  initial.forEach(el => {
@@ -129,6 +199,7 @@
 	  });
 
 	});
+
 
 	function stop() {
 		createjs.Ticker.removeEventListener("tick", tick);

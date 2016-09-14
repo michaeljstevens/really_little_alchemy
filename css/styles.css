@@ -11,7 +11,7 @@
 body{ background-color: ivory; }
 
 .wrapper {
-    margin-top: 100px;
+    margin-top: 50px;
     border: 10px solid blue;
     top:10px;
     left:10px;
@@ -39,4 +39,20 @@ body{ background-color: ivory; }
 #bodyCanvas {
     left:0px;
     top:0px;
+}
+
+.about {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 10px;
+  border-radius: 7px;
+  font-size: 20px;
+  background: ivory;
+  border: 1px solid blue;
+}
+
+.about:hover {
+  padding: 12px;
+  cursor: pointer;
 }

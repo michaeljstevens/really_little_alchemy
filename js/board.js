@@ -68,11 +68,11 @@ document.addEventListener("DOMContentLoaded", function() {
 
 	$(".mute").on("click", (e) => {
 		if (e.currentTarget.alt === "false") {
-			e.currentTarget.src = "./img/unmute.png";
+			e.currentTarget.src = "./img/mute.png";
 			e.currentTarget.alt = "true";
 			mute = true;
 		} else {
-			e.currentTarget.src = "./img/mute.png";
+			e.currentTarget.src = "./img/unmute.png";
 			e.currentTarget.alt = "false";
 			mute = false;
 		}
@@ -297,7 +297,6 @@ function handleImageLoad(event) {
 	update = true;
 
 	bitmap.on("mousedown", function (evt) {
-
     if(evt.currentTarget.y > 465 ) {
 			stage.children[2].addChild(bitmap);
 			let bitmapDup = bitmap.clone(true);
@@ -313,7 +312,7 @@ function handleImageLoad(event) {
 	});
 
   bitmap.on("pressup", function (evt) {
-    elements.push(bitmap);
+		elements.push(bitmap);
     if(this.y < 465 ) {
       let toRemove = [];
       for (var i = 0; i < elements.length; i++) {
@@ -370,7 +369,7 @@ function handleImageLoad(event) {
       });
     } else {
       stage.children[1].removeChild(this.parent);
-			stage.childern[2].removeChild(this);
+			stage.children[2].removeChild(this);
     }
     update = true;
   });

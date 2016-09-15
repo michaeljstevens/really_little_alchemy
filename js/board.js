@@ -1,6 +1,5 @@
 const Element = require('./element.js');
-const la = require('little-alchemy');
-
+const combine = require('./combine.js');
 
 var canvas, stage;
 
@@ -95,6 +94,7 @@ document.addEventListener("DOMContentLoaded", function() {
 	modalDescription.text = "You're given 4 elements to begin.\
 	Try combining these with themselves and each other to discover new elements!\
 	There are 100 in total. Good luck!"
+	modalDescription.textBaseline='alphabetic';
 	modalDescription.x = 480;
 	modalDescription.y = 200;
 	modalDescription.textAlign = 'center';
@@ -230,7 +230,7 @@ function handleImageLoad(event) {
                                   element.x + 10 < this.x - 10 ||
                                   element.y - 10 > this.y + 10 ||
                                   element.y + 10 < this.y - 10)) {
-				 let combined = la.combine(this.name, elements[i].name);
+				 let combined = combine(this.name, elements[i].name);
 				 if (combined !== undefined) {
 					 combined = combined[0];
 					 var discoveredEl = new Image();

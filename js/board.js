@@ -47,7 +47,7 @@ document.addEventListener("DOMContentLoaded", function() {
  	stage.addChild(disContainer);
 
 	var mask = new createjs.Shape();
-	mask.graphics.f("#f00").dr(0,500,1000,500);
+	mask.graphics.f("#f00").dr(0,505,1000,500);
 	disContainer.mask = mask;
 
 	var wrapper;
@@ -138,8 +138,33 @@ document.addEventListener("DOMContentLoaded", function() {
 		update = true;
 	});
 
+	$(".cheat").on("click", (e) => {
 
-	stage.update();
+		elOffset = 0;
+		yCoord = 520;
+		stage.children[1].removeAllChildren();
+
+		if(e.currentTarget.textContent === "Cheat") {
+			e.currentTarget.textContent = "Start Over";
+			all.forEach(el => {
+				let image = new Image();
+				image.src = `./img/${el}.png`;
+				let elObj = {name: el};
+				image.onload = handleImageLoad.bind(elObj);
+			});
+		} else {
+			e.currentTarget.textContent = "Cheat";
+			initial.forEach(el => {
+				let image = new Image();
+				image.src = `./img/${el}.png`;
+				let elObj = {name: el};
+				image.onload = handleImageLoad.bind(elObj);
+			});
+		}
+	});
+
+
+	update = true;
 
   initial.forEach(el => {
     let image = new Image();
@@ -211,6 +236,7 @@ function handleImageLoad(event) {
       var imageDup = new Image();
       imageDup.src = this.image.src;
       imageDup.onload = handleImageLoad.bind(bitmapDup);
+
 			this.y = evt.stageY - 20;
       this.offset = {x: this.x - evt.stageX, y: this.y - evt.stageY};
     }

@@ -52,7 +52,23 @@ body{ background-color: ivory; }
   border: 1px solid blue;
 }
 
+.cheat {
+  position: absolute;
+  top: 65px;
+  right: 10px;
+  padding: 10px;
+  border-radius: 7px;
+  font-size: 20px;
+  background: ivory;
+  border: 1px solid blue;
+}
+
 .about:hover {
+  padding: 12px;
+  cursor: pointer;
+}
+
+.cheat:hover {
   padding: 12px;
   cursor: pointer;
 }

@@ -199,6 +199,49 @@
 			update = true;
 		});
 
+		var winModal = new createjs.Shape();
+		winModal.graphics.beginFill('ivory');
+		winModal.graphics.setStrokeStyle(2,'round').beginStroke('#357EBD');
+		winModal.alpha = 1;
+		winModal.graphics.drawRect(240, 100, 500, 300);
+		winModal.graphics.endFill();
+		stage.addChild(winModal);
+		winModal.visible = false;
+
+		var winModalLabel = new createjs.Text("You Win!", "40px Arial", "#000");
+		winModalLabel.x = 490;
+		winModalLabel.y = 120;
+		winModalLabel.textAlign = 'center';
+		winModalLabel.lineWidth = 800;
+		winModalLabel.lineHeight = 50;
+		stage.addChild(winModalLabel);
+		winModalLabel.visible = false;
+
+		var newButton = new createjs.Shape();
+		buttonok.graphics.beginFill('lightgrey');
+		buttonok.graphics.setStrokeStyle(2,'round').beginStroke('#357EBD');
+		buttonok.graphics.drawRoundRect(630, 350, 100, 40, 5);
+		buttonok.cursor = "pointer";
+		stage.addChild(buttonok);
+		buttonok.visible = false;
+
+		buttonok.on("click", () => {
+			aboutModal.visible = false;
+			modalLabel.visible = false;
+			modalDescription.visible = false;
+			buttonokLabel.visible = false;
+			buttonok.visible = false;
+			update = true;
+		});
+
+		var newButtonLabel = new createjs.Text("Continue", "20px Arial", "#000");
+		buttonokLabel.x = 640;
+		buttonokLabel.y = 360;
+		modalDescription.lineWidth = 300;
+		modalDescription.lineHeight = 20;
+		stage.addChild(buttonokLabel);
+		buttonokLabel.visible = false;
+
 		$(".cheat").on("click", (e) => {
 			elOffset = 0;
 			yCoord = 520;
@@ -263,8 +306,6 @@
 			stage.children[1].addChild(container);
 			container.addChild(bitmap);
 		}
-	  console.log(elOffset);
-		console.log(yCoord);
 		bitmap.regX = bitmap.width / 2 | 0;
 		bitmap.regY = bitmap.height / 2 | 0;
 		bitmap.name = this.name;
@@ -276,7 +317,6 @@
 		text.x = bitmap.x + 5;
 		container.addChild(text);
 
-		console.log(bitmap.name);
 		if (!this.x && !this.discovered) {
 			if (elOffset > 700) {
 				elOffset = 0;
@@ -339,6 +379,8 @@
 							kimbitmap.x = Math.random() * 1000;
 							kimbitmap.y = Math.random() * 1000;
 						 }
+						 let explode = new Audio('./sounds/nuclear_war.mp3');
+						 if(!mute) explode.play();
 						 stage.addChild(kimContainer);
 						 update = true;
 					 }

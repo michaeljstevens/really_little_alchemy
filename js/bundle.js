@@ -247,8 +247,9 @@
 			yCoord = 520;
 			stage.children[1].removeAllChildren();
 			stage.children[2].removeAllChildren();
-			if (stage.children[9] && stage.children[9].children) {
-				stage.children[9].removeAllChildren();
+
+			if (stage.children[11] && stage.children[11].children) {
+				stage.children[11].removeAllChildren();
 			}
 			discovered = [];
 			update = true;

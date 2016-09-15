@@ -1,6 +1,5 @@
 const Element = require('./element.js');
-const la = require('little-alchemy');
-
+const combine = require('./combine.js');
 
 var canvas, stage;
 
@@ -8,22 +7,21 @@ var mouseTarget;
 var dragStarted;
 var offset;
 var update = true;
-var initial = ["fire", "water", "earth", "air"]
-//  "brick", "cloud", "dust", "steam", "swamp", "tobacco", "gunpowder", "rain",
-//  "fire", "water", "earth", "air",
-//   "brick", "cloud", "dust", "steam", "swamp", "tobacco", "gunpowder", "rain",
-// "brick", "cloud", "dust", "steam", "swamp", "tobacco", "gunpowder", "rain",
-// "brick", "cloud", "dust", "steam", "swamp", "tobacco", "gunpowder", "rain",
-// "brick", "cloud", "dust", "steam", "swamp", "tobacco", "gunpowder", "rain",
-// "brick", "cloud", "dust", "steam", "swamp", "tobacco", "gunpowder", "rain",
-// "brick", "cloud", "dust", "steam", "swamp", "tobacco", "gunpowder", "rain",
-// "brick", "cloud", "dust", "steam", "swamp", "tobacco", "gunpowder", "rain",
-// "brick", "cloud", "dust", "steam", "swamp", "tobacco", "gunpowder", "rain",
-// "brick", "cloud", "dust", "steam", "swamp", "tobacco", "gunpowder", "rain",
-// "brick", "cloud", "dust", "steam", "swamp", "tobacco", "gunpowder", "rain",
-// "brick", "cloud", "dust", "steam", "swamp", "tobacco", "gunpowder", "rain"];
-var discovered = [];
+var initial = ["fire", "water", "earth", "air"];
+var all = ["fire", "water", "earth", "air", "pressure", "energy", "dust", "lava",
+"rain", "mud", "steam", "sea", "wind","stone","atmosphere","earthquake","gunpowder",
+"salt","volcano","granite","obsidian","brick","plant","flood","ocean","geyser","sky","sand","wall",
+"fog","mountain","storm","metal","explosion","swamp","tsunami","algae","isle","wave","cotton",
+"grass","tobacco","seaweed","garden","moss","coal","ash","cloud","eruption","hurricane",
+"rust","sound","atomic bomb","grenade","fireworks","glass","sun","dew","bullet",
+"archipelago","steel","electricity","blade","mountain range","river","beach","horizon",
+"flower","ivy","diamond","sandstorm","clay","cactus","desert","quicksand","dune","moon",
+"boiler","sandstone","life","house","pond","bird","scissors","blender","scythe","sword",
+"golem","pyramid","oasis","ring","human","light bulb","wire","pottery","water lily",
+"sunflower","glasses","mirror","telescope"];
+
 var elements = [];
+var discovered = [];
 var elOffset = 0;
 var yCoord = 520;
 
@@ -32,11 +30,8 @@ document.addEventListener("DOMContentLoaded", function() {
 	canvas = document.getElementById("bodyCanvas");
 	stage = new createjs.Stage(canvas);
 
-
-
 	stage.enableMouseOver(10);
 	stage.mouseMoveOutside = true;
-
 
   const line = new createjs.Shape();
 
@@ -65,7 +60,7 @@ document.addEventListener("DOMContentLoaded", function() {
 	});
 
 	$(".bar").on("drag", function (event, ui) {
-		stage.children[1].y = 0 - ui.position.top * 4.4;
+		stage.children[1].y = 0 - ui.position.top * 5.8;
 		stage.update();
 	});
 
@@ -95,6 +90,7 @@ document.addEventListener("DOMContentLoaded", function() {
 	modalDescription.text = "You're given 4 elements to begin.\
 	Try combining these with themselves and each other to discover new elements!\
 	There are 100 in total. Good luck!"
+	modalDescription.textBaseline='alphabetic';
 	modalDescription.x = 480;
 	modalDescription.y = 200;
 	modalDescription.textAlign = 'center';
@@ -188,7 +184,7 @@ function handleImageLoad(event) {
 			elOffset = 0;
 			yCoord += 100;
 		} else {
-			elOffset += 100;
+			elOffset += 140;
 		}
 	}
 
@@ -209,13 +205,13 @@ function handleImageLoad(event) {
 	update = true;
 
 	bitmap.on("mousedown", function (evt) {
-
     if(evt.currentTarget.y > 465 ) {
 			stage.children[2].addChild(bitmap);
+			let bitmapDup = bitmap.clone(true);
       var imageDup = new Image();
       imageDup.src = this.image.src;
-      imageDup.onload = handleImageLoad.bind(this);
-      // this.parent.addChild(this);
+      imageDup.onload = handleImageLoad.bind(bitmapDup);
+			this.y = evt.stageY - 20;
       this.offset = {x: this.x - evt.stageX, y: this.y - evt.stageY};
     }
 	});
@@ -230,7 +226,7 @@ function handleImageLoad(event) {
                                   element.x + 10 < this.x - 10 ||
                                   element.y - 10 > this.y + 10 ||
                                   element.y + 10 < this.y - 10)) {
-				 let combined = la.combine(this.name, elements[i].name);
+				 let combined = combine(this.name, elements[i].name);
 				 if (combined !== undefined) {
 					 combined = combined[0];
 					 var discoveredEl = new Image();

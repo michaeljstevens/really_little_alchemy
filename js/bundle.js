@@ -189,6 +189,7 @@
 			elOffset = 0;
 			yCoord = 520;
 			stage.children[1].removeAllChildren();
+			discovered = [];
 
 			if(e.currentTarget.textContent === "Cheat") {
 				e.currentTarget.textContent = "Start Over";
@@ -232,10 +233,17 @@
 		var container = new createjs.Container();
 		bitmap = new createjs.Bitmap(image);
 
-		stage.children[1].addChild(container);
-		container.addChild(bitmap);
-		bitmap.x = this.x || 40 + elOffset;
-		bitmap.y = this.y || yCoord;
+		if (this.discovered) {
+			bitmap.x = this.altX;
+			bitmap.y = this.altY;
+			stage.children[2].addChild(bitmap);
+			elements.push(bitmap);
+		} else {
+			bitmap.x = this.x || 40 + elOffset;
+			bitmap.y = this.y || yCoord;
+			stage.children[1].addChild(container);
+			container.addChild(bitmap);
+		}
 	  console.log(elOffset);
 		console.log(yCoord);
 		bitmap.regX = bitmap.width / 2 | 0;
@@ -250,7 +258,7 @@
 		container.addChild(text);
 
 		console.log(bitmap.name);
-		if (!this.x) {
+		if (!this.x && !this.discovered) {
 			if (elOffset > 700) {
 				elOffset = 0;
 				yCoord += 100;
@@ -276,6 +284,7 @@
 		update = true;
 
 		bitmap.on("mousedown", function (evt) {
+
 	    if(evt.currentTarget.y > 465 ) {
 				stage.children[2].addChild(bitmap);
 				let bitmapDup = bitmap.clone(true);
@@ -285,19 +294,22 @@
 
 				this.y = evt.stageY - 20;
 	      this.offset = {x: this.x - evt.stageX, y: this.y - evt.stageY};
-	    }
+	    } else {
+				this.offset = {x: this.x - evt.stageX, y: this.y - evt.stageY};
+			}
 		});
 
 	  bitmap.on("pressup", function (evt) {
+			debugger
 	    elements.push(bitmap);
 	    if(this.y < 465 ) {
 	      let toRemove = [];
 	      for (var i = 0; i < elements.length; i++) {
 	        let element = elements[i];
-	        if (this !== element && !(element.x - 10 > this.x + 10 ||
-	                                  element.x + 10 < this.x - 10 ||
-	                                  element.y - 10 > this.y + 10 ||
-	                                  element.y + 10 < this.y - 10)) {
+	        if (this !== element && !(element.x - 15 > this.x + 15 ||
+	                                  element.x + 15 < this.x - 15 ||
+	                                  element.y - 15 > this.y + 15 ||
+	                                  element.y + 15 < this.y - 15)) {
 					 let combined = combine(this.name, elements[i].name);
 					 if (combined !== undefined) {
 						 combined = combined[0];
@@ -307,6 +319,10 @@
 							 let elObj = {name: combined};
 							 discoveredEl.onload = handleImageLoad.bind(elObj);
 						 }
+						 let elObj = {name: combined, altX: this.x, altY: this.y, discovered: true};
+			       let imageDup = new Image();
+			       imageDup.src = discoveredEl.src
+			       imageDup.onload = handleImageLoad.bind(elObj);
 					 }
 					 stage.children[1].removeChild(this.parent);
 					 stage.children[1].removeChild(element.parent);
@@ -350,6 +366,7 @@
 			this.scaleX = this.scaleY = this.scale;
 			update = true;
 		});
+
 		createjs.Ticker.addEventListener("tick", tick);
 	}
 

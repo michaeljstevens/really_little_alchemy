@@ -68,11 +68,11 @@ document.addEventListener("DOMContentLoaded", function() {
 
 	$(".mute").on("click", (e) => {
 		if (e.currentTarget.alt === "false") {
-			e.currentTarget.src = "../img/unmute.png";
+			e.currentTarget.src = "./img/unmute.png";
 			e.currentTarget.alt = "true";
 			mute = true;
 		} else {
-			e.currentTarget.src = "../img/mute.png";
+			e.currentTarget.src = "./img/mute.png";
 			e.currentTarget.alt = "false";
 			mute = false;
 		}
@@ -309,10 +309,10 @@ function handleImageLoad(event) {
 		       let imageDup = new Image();
 		       imageDup.src = discoveredEl.src
 		       imageDup.onload = handleImageLoad.bind(elObj);
-					 const laugh = new Audio("../sounds/great_job.wav");
+					 const laugh = new Audio("./sounds/great_job.wav");
 					 if(!mute) laugh.play();
 				 } else {
-						greatJob = new Audio("../sounds/laugh.wav");
+						greatJob = new Audio("./sounds/laugh.wav");
 						if(!mute) greatJob.play();
 				 }
 				 stage.children[1].removeChild(this.parent);

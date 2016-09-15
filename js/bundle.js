@@ -189,6 +189,7 @@
 			elOffset = 0;
 			yCoord = 520;
 			stage.children[1].removeAllChildren();
+			stage.children[2].removeAllChildren();
 			discovered = [];
 
 			if(e.currentTarget.textContent === "Cheat") {

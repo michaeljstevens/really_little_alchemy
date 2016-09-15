@@ -333,7 +333,7 @@
 						 let kimContainer = new createjs.Container;
 						 for (var i = 0; i < 500; i++) {
 						 	let kim = new Image();
-							kim.src="../img/kim-yong-trump.jpg";
+							kim.src="./img/kim-yong-trump.jpg";
 							let kimbitmap = new createjs.Bitmap(kim)
 							kimContainer.addChild(kimbitmap);
 							kimbitmap.x = Math.random() * 1000;

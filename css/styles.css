@@ -80,6 +80,11 @@ body{ background-color: ivory; }
   right: 10px;
 }
 
+.mute:hover {
+  cursor: pointer;
+  
+}
+
 .header {
   font-size: 54px;
   font-family: fantasy;

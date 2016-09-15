@@ -204,8 +204,11 @@
 			yCoord = 520;
 			stage.children[1].removeAllChildren();
 			stage.children[2].removeAllChildren();
+			if (stage.children[9] && stage.children[9].children) {
+				stage.children[9].removeAllChildren();
+			}
 			discovered = [];
-
+			update = true;
 			if(e.currentTarget.textContent === "Cheat") {
 				e.currentTarget.textContent = "Start Over";
 				all.forEach(el => {
@@ -316,7 +319,6 @@
 		});
 
 	  bitmap.on("pressup", function (evt) {
-			debugger
 	    elements.push(bitmap);
 	    if(this.y < 465 ) {
 	      let toRemove = [];
@@ -326,6 +328,20 @@
 	                                  element.x + 15 < this.x - 15 ||
 	                                  element.y - 15 > this.y + 15 ||
 	                                  element.y + 15 < this.y - 15)) {
+
+					 if([this.name, element.name].sort().join()===["atomic bomb", "earth"].join()) {
+						 let kimContainer = new createjs.Container;
+						 for (var i = 0; i < 500; i++) {
+						 	let kim = new Image();
+							kim.src="../img/kim-yong-trump.jpg";
+							let kimbitmap = new createjs.Bitmap(kim)
+							kimContainer.addChild(kimbitmap);
+							kimbitmap.x = Math.random() * 1000;
+							kimbitmap.y = Math.random() * 1000;
+						 }
+						 stage.addChild(kimContainer);
+						 update = true;
+					 }
 					 let combined = combine(this.name, elements[i].name);
 					 if (combined !== undefined) {
 						 combined = combined[0];

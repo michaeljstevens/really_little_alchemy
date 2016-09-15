@@ -73,6 +73,13 @@ body{ background-color: ivory; }
   cursor: pointer;
 }
 
+.mute {
+  height: 50px;
+  position: absolute;
+  top: 120px;
+  right: 10px;
+}
+
 .header {
   font-size: 54px;
   font-family: fantasy;

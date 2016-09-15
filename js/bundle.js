@@ -70,6 +70,7 @@
 	var discovered = [];
 	var elOffset = 0;
 	var yCoord = 520;
+	var mute = false;
 
 
 	document.addEventListener("DOMContentLoaded", function() {
@@ -108,6 +109,20 @@
 		$(".bar").on("drag", function (event, ui) {
 			stage.children[1].y = 0 - ui.position.top * 5.8;
 			stage.update();
+		});
+
+
+		$(".mute").on("click", (e) => {
+			if (e.currentTarget.alt === "false") {
+				e.currentTarget.src = "../img/unmute.png";
+				e.currentTarget.alt = "true";
+				mute = true;
+			} else {
+				e.currentTarget.src = "../img/mute.png";
+				e.currentTarget.alt = "false";
+				mute = false;
+			}
+			update = true;
 		});
 
 		var mainContainer = new createjs.Container();
@@ -185,7 +200,6 @@
 		});
 
 		$(".cheat").on("click", (e) => {
-
 			elOffset = 0;
 			yCoord = 520;
 			stage.children[1].removeAllChildren();
@@ -222,6 +236,7 @@
 	  });
 
 	});
+
 
 
 	function stop() {
@@ -324,6 +339,11 @@
 			       let imageDup = new Image();
 			       imageDup.src = discoveredEl.src
 			       imageDup.onload = handleImageLoad.bind(elObj);
+						 const laugh = new Audio("../sounds/great_job.wav");
+						 if(!mute) laugh.play();
+					 } else {
+							greatJob = new Audio("../sounds/laugh.wav");
+							if(!mute) greatJob.play();
 					 }
 					 stage.children[1].removeChild(this.parent);
 					 stage.children[1].removeChild(element.parent);

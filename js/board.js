@@ -26,6 +26,22 @@ var elOffset = 0;
 var yCoord = 520;
 var mute = false;
 
+var winModal = new createjs.Shape();
+winModal.graphics.beginFill('ivory');
+winModal.graphics.setStrokeStyle(2,'round').beginStroke('#357EBD');
+winModal.alpha = 1;
+winModal.graphics.drawRect(240, 100, 500, 300);
+winModal.graphics.endFill();
+winModal.visible = false;
+
+var winModalLabel = new createjs.Text("You Win!", "80px Arial", "#000");
+winModalLabel.x = 490;
+winModalLabel.y = 190;
+winModalLabel.textAlign = 'center';
+winModalLabel.lineWidth = 800;
+winModalLabel.lineHeight = 50;
+winModalLabel.visible = false;
+
 
 document.addEventListener("DOMContentLoaded", function() {
 	canvas = document.getElementById("bodyCanvas");
@@ -82,6 +98,9 @@ document.addEventListener("DOMContentLoaded", function() {
 	var mainContainer = new createjs.Container();
 	stage.addChild(mainContainer);
 	mainContainer.setBounds(0,0,1000,500);
+
+	stage.addChild(winModal);
+	stage.addChild(winModalLabel);
 
 	var aboutModal = new createjs.Shape();
 	aboutModal.graphics.beginFill('ivory');
@@ -153,32 +172,6 @@ document.addEventListener("DOMContentLoaded", function() {
 		update = true;
 	});
 
-	var winModal = new createjs.Shape();
-	winModal.graphics.beginFill('ivory');
-	winModal.graphics.setStrokeStyle(2,'round').beginStroke('#357EBD');
-	winModal.alpha = 1;
-	winModal.graphics.drawRect(240, 100, 500, 300);
-	winModal.graphics.endFill();
-	stage.addChild(winModal);
-	winModal.visible = false;
-
-	var winModalLabel = new createjs.Text("You Win!", "40px Arial", "#000");
-	winModalLabel.x = 490;
-	winModalLabel.y = 120;
-	winModalLabel.textAlign = 'center';
-	winModalLabel.lineWidth = 800;
-	winModalLabel.lineHeight = 50;
-	stage.addChild(winModalLabel);
-	winModalLabel.visible = false;
-
-	var newButton = new createjs.Shape();
-	buttonok.graphics.beginFill('lightgrey');
-	buttonok.graphics.setStrokeStyle(2,'round').beginStroke('#357EBD');
-	buttonok.graphics.drawRoundRect(630, 350, 100, 40, 5);
-	buttonok.cursor = "pointer";
-	stage.addChild(buttonok);
-	buttonok.visible = false;
-
 	buttonok.on("click", () => {
 		aboutModal.visible = false;
 		modalLabel.visible = false;
@@ -188,19 +181,13 @@ document.addEventListener("DOMContentLoaded", function() {
 		update = true;
 	});
 
-	var newButtonLabel = new createjs.Text("Continue", "20px Arial", "#000");
-	buttonokLabel.x = 640;
-	buttonokLabel.y = 360;
-	modalDescription.lineWidth = 300;
-	modalDescription.lineHeight = 20;
-	stage.addChild(buttonokLabel);
-	buttonokLabel.visible = false;
-
 	$(".cheat").on("click", (e) => {
 		elOffset = 0;
 		yCoord = 520;
 		stage.children[1].removeAllChildren();
 		stage.children[2].removeAllChildren();
+		winModal.visible = false;
+		winModalLabel.visible = false;
 
 		if (stage.children[11] && stage.children[11].children) {
 			stage.children[11].removeAllChildren();
@@ -407,5 +394,17 @@ function tick(event) {
 	if (update) {
 		update = false;
 		stage.update(event);
+	}
+
+
+
+	if (stage.children[1].children.length >= 100) {
+		winModal.visible = true;
+		winModalLabel.visible = true;
+		$('cheat').textContent = "Start Over";
+		update = true;
+	} else {
+		winModal.visible = false;
+		winModalLabel.visible = false;
 	}
 }

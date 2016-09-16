@@ -1,80 +1,134 @@
 ## Really Little Alchemy
 
+Really Little Alchemy is a game where users combine simple items to create up to 100 increasingly complex items.
+
+[Really Little Alchemy Live][url]
+[url]: https://michaeljstevens.github.io/really_little_alchemy/
+
 ### Background
 
-Little Alchemy is a game where a player begins with 4 fundamental elements (air, wind, earth and fire) which can be combined in logical ways to create increasingly complex elements. For example, earth and fire become lava, water and fire become steam, etc. The goal of the game is to unlock all the possible elements. In the original version there are 560 elements. I plan to include ~100 elements depending on time.
+Alchemy is a game where a player begins with basic items which can be combined in logical ways to discover new items. For example, earth and fire become lava, water and fire become steam, etc. The goal of the game is to unlock all the possible elements.
 
-### Functionality & MVP  
+This project is a streamlined JavaScript implementation of Alchemy, as described below.
 
-This implementation of Little Alchemy will:
+### Features
 
-- [ ] Drag elements from the sidebar onto the board
-- [ ] Drag elements on top of one another to produce new elements
-- [ ] Keep track of discovered elements/total elements
-- [ ] Tell the user if he/she has won
-
-In addition, this project will include:
-
-- [ ] A production Readme
-
-### Wireframes
-
-This app will include a game board into which users can drag elements, a sidebar containing all the elements a user has uncovered and an about modal.
-
-<img align="center" src="wireframes/really_little-alchemy.png" height="300px" style="display: block; "/>
+- 100 items to discover
+- Drag and drop interface
+- Custom scrollbar
+- Sound effects
 
 ### Architecture and Technologies
 
-This project will be implemented with the following technologies:
+- JavaScript
+- CreateJS
+- jQuery
+- CSS3/HTML5
 
-- Vanilla JavaScript and `jquery` for overall structure and game logic,
-- `Easel.js` with `HTML5 Canvas` for DOM manipulation and rendering,
-- Webpack to bundle and serve up the various scripts.
-- `Interact.js` for drag and drop
+### How to Play
 
-In addition to the webpack entry file, there will be three scripts involved in this project:
+You're given 4 items to start: fire, water, earth, and air.
 
-`board.js`: this script will handle the logic for creating and updating the necessary `Easel.js` elements and rendering them to the DOM.
+<img src="./assets/screenshots/start.png" style="width: 200px"/>
 
-`element.js`: this script will produce an element object(fire, water, etc). It will store a reference to its own position on the board.
+Drag and drop items from the smaller compartment to the larger compartment. Drag two items together to see if they combine.
 
-`combine.js`: this script will store a reference to the elements that have been dragged onto the board and handle the logic for combining elements. When two compatible elements are put together, both will disappear and the new element will be rendered.
+<img src="./assets/screenshots/combining.png" style="width: 200px"/>
 
-`sidebar.js`: this script will be responsible for keeping track of all the elements the user has discovered in alphabetical order. When a new element is discovered in the main board, it will be added to the sideboard. It will also keep a count of all the elements the user has uncovered.
+If two items are compatible, a new item will become available.
 
-### Implementation Timeline
+<img src="./assets/screenshots/discover.png" style="width: 200px"/>
 
-**Day 1**: Setup all necessary Node modules, including getting webpack up and running and `Easel.js` installed.  Create `webpack.config.js` as well as `package.json`.  Write a basic entry file and the bare bones of all 3 scripts outlined above.  Learn the basics of `Easel.js`.  Goals for the day:
+Try to find as many items as you can.
 
-- Get a green bundle with `webpack`
-- Learn enough `Easel.js` to render an object to the `Canvas` element
+<img src="./assets/screenshots/continue.png" style="width: 200px"/>
 
-**Day 2**: Dedicate this day to learning the `Easel.js` `Interact.js` APIs.
+Upon discovering the 100th item, a win modal pops up.
 
-Build `element` object in `element.js` and connect it to `board.js`. Make sure the board.js renders the sidebar and at least one element in both the sidebar and the main area. Be able to drag and drop elements around the board.
+<img src="./assets/screenshots/win.png" style="width: 200px"/>
+
+Click the sound icon to mute the sound effects.
+
+<img src="./assets/screenshots/mute.png" style="width: 50px"/>
+
+Drag and drop the scrollbar to view all discovered items.
+
+<img src="./assets/screenshots/scroll.png" style="width: 400px"/>
+
+### Code Snippets
+
+To handle overlapping items I simply checked if their coordinates overlapped to within 30px.
+
+```js
+if (this !== element && !(element.x - 15 > this.x + 15 ||
+                          element.x + 15 < this.x - 15 ||
+                          element.y - 15 > this.y + 15 ||
+                          element.y + 15 < this.y - 15))
+```
+Creating the vertical scrollbar presented a challenge. First, a created the scrollbar in html and used the jQuery ui library to set a draggable listener to the DOM element. 'stage.children[1]' is a container with all discovered items. I adjusted the 'ui.position.top' to accommodate all 100 items.
+
+```js
+  $(".bar").draggable({
+    containment: "parent"
+  });
+
+  $(".bar").on("drag", function (event, ui) {
+    stage.children[1].y = 0 - ui.position.top * 5.8;
+    stage.update();
+  });
+```
+I then had to add a mask using CreateJS to 'stage.children[1]' to prevent items from overlapping into the main compartment.
+
+```js
+  var mask = new createjs.Shape();
+  mask.graphics.f("#f00").dr(0,505,1000,500);
+  disContainer.mask = mask;
+```
+However, this created a problem in that I was no longer able to drag items from the bottom to the top. To solve this problem, I modified the CreateJS click listener to clone the item and add it to the top container.
+
+```js
+  bitmap.on("mousedown", function (evt) {
+    if(evt.currentTarget.y > 465 ) {
+      stage.children[2].addChild(bitmap);
+      let bitmapDup = bitmap.clone(true);
+      var imageDup = new Image();
+      imageDup.src = this.image.src;
+      imageDup.onload = handleImageLoad.bind(bitmapDup);
+
+      this.y = evt.stageY - 20;
+      this.offset = {x: this.x - evt.stageX, y: this.y - evt.stageY};
+    } else {
+      this.offset = {x: this.x - evt.stageX, y: this.y - evt.stageY};
+    }
+  });
+```
+
+```js
+  var allRecipes = require('./combos.js');
+
+  function combine(el1, el2) {
+      let recipe = [el1, el2].sort().join(',');
+      return allRecipes[recipe];
+  }
+
+  module.exports = combine;
+```
+
+To combine the items into newly discovered items, I created an array of the possible combinations and created a function to output a new item based on two inputted items.
+
+```js
+  var allRecipes = recipes.reduce((comb, [first, second]) => {
+    if (!comb.hasOwnProperty(second)) comb[second] = [];
+    comb[second].push(first);
+    return comb;
+  }, {});
+```
 
 
-- Complete the `element.js` module
-- Render a main area and sidebar to the `Canvas` using `Easel.js`
-- Render elements into the `Canvas`
-- Drag and drop elements
+### Future Direction
 
-**Day 3**: Handle combining elements
+I plan to add the following features to this application:
 
-Store elements' positions in `element` object. Create `combine.js`. When two elements overlap, check if valid combination. Destroy combined elements and render new element to `Canvas`
-
-- Add position to `element` objects.
-- Write `combine.js` to check if two elements' positions overlap, remove compatible overlapping elements, and render new element on the board.
-
-
-**Day 4**: Create `sidebar.js` to store all discovered elements. When a new element is discovered it should be added to the sidebar. Users can drag elements from the sidebar to the main board. Show user number of discovered elements/total elements. If the number of discovered elements = total elements, inform the user that he/she has won the game.
-
-- Create `sidebar.js` with 4 initial elements
-- When new element is discovered, pass it to the sidebar and render it on the `Canvas`.
-- Store a count of how many elements have been discovered and render it to the `Canvas`.
-- If number of discovered elements = total elements, inform user that he/she as won.
-
-
-### Bonus features
-
-If time permits, I'll add more elements to discover. I may also add sound effects and graphics when a user discovers a new element.
+- More elements
+- Unique sound effect for each discovery
+- Save and load game

@@ -271,8 +271,6 @@
 
 	});
 
-
-
 	function stop() {
 		createjs.Ticker.removeEventListener("tick", tick);
 	}
@@ -433,18 +431,9 @@
 			update = true;
 		});
 
-		createjs.Ticker.addEventListener("tick", tick);
-	}
-
-	function tick(event) {
-		if (update) {
-			update = false;
-			stage.update(event);
-		}
-
-
-
 		if (stage.children[1].children.length >= 100) {
+			let cheer = new Audio('./sounds/win.mp3');
+			cheer.play();
 			winModal.visible = true;
 			winModalLabel.visible = true;
 			$('cheat').textContent = "Start Over";
@@ -453,6 +442,17 @@
 			winModal.visible = false;
 			winModalLabel.visible = false;
 		}
+
+		createjs.Ticker.addEventListener("tick", tick);
+	}
+
+	function tick(event) {
+
+		if (update) {
+			update = false;
+			stage.update(event);
+		}
+
 	}
 
 

@@ -169,6 +169,7 @@
 		var modalDescription = new createjs.Text("", "20px Arial", "#000");
 		modalDescription.text = "You're given 4 elements to begin.\
 		Try combining these with themselves and each other to discover new elements!\
+		Pull the elements into the upper compartment to combine\
 		There are 100 in total. Good luck!"
 		modalDescription.textBaseline='alphabetic';
 		modalDescription.x = 480;
@@ -433,7 +434,7 @@
 
 		if (stage.children[1].children.length >= 100) {
 			let cheer = new Audio('./sounds/win.mp3');
-			cheer.play();
+			if(!mute) cheer.play();
 			winModal.visible = true;
 			winModalLabel.visible = true;
 			$('cheat').textContent = "Start Over";

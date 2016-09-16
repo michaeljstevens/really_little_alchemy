@@ -25,10 +25,10 @@ var data = [["pressure", ["air", "air"]], ["energy", ["air", "fire"]], ["dust", 
 ["pottery", ["fire", "clay"]], ["water lily", ["flower", "pond"]], ["sunflower", ["flower", "sun"]], ["glasses", ["glass", "glass"]],
 ["mirror", ["glass", "metal"]], ["telescope", ["glass", "sky"]]];
 
-var byRecipe = data.reduce((pv, [name, recipe], i, a) => {
-  if (!pv.hasOwnProperty(recipe)) pv[recipe] = [];
-  pv[recipe].push(name);
-  return pv;
+var allRecipes = data.reduce((comb, [first, second]) => {
+  if (!comb.hasOwnProperty(second)) comb[second] = [];
+  comb[second].push(first);
+  return comb;
 }, {});
 
-module.exports = byRecipe;
+module.exports = allRecipes;

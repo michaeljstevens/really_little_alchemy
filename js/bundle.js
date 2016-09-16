@@ -345,7 +345,7 @@
 		});
 
 	  bitmap.on("pressup", function (evt) {
-			elements.push(bitmap);
+			if(!elements.includes(bitmap)) elements.push(bitmap);
 	    if(this.y < 465 ) {
 	      let toRemove = [];
 	      for (var i = 0; i < elements.length; i++) {
@@ -368,6 +368,7 @@
 						 let explode = new Audio('./sounds/nuclear_war.mp3');
 						 if(!mute) explode.play();
 						 stage.addChild(kimContainer);
+						 $('.cheat').text("Start Over");
 						 update = true;
 					 }
 					 let combined = combine(this.name, elements[i].name);
@@ -437,7 +438,6 @@
 			if(!mute) cheer.play();
 			winModal.visible = true;
 			winModalLabel.visible = true;
-			$('cheat').textContent = "Start Over";
 			update = true;
 		} else {
 			winModal.visible = false;
@@ -481,11 +481,11 @@
 /* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var byRecipe = __webpack_require__(8)
+	var allRecipes = __webpack_require__(8);
 
-	function combine(element1, element2) {
-	    var recipe = [element1, element2].sort().join(',');
-	    return byRecipe[recipe];
+	function combine(el1, el2) {
+	    let recipe = [el1, el2].sort().join(',');
+	    return allRecipes[recipe];
 	}
 
 	module.exports = combine;
@@ -522,13 +522,13 @@
 	["pottery", ["fire", "clay"]], ["water lily", ["flower", "pond"]], ["sunflower", ["flower", "sun"]], ["glasses", ["glass", "glass"]],
 	["mirror", ["glass", "metal"]], ["telescope", ["glass", "sky"]]];
 
-	var byRecipe = data.reduce((pv, [name, recipe], i, a) => {
-	  if (!pv.hasOwnProperty(recipe)) pv[recipe] = [];
-	  pv[recipe].push(name);
-	  return pv;
+	var allRecipes = data.reduce((comb, [first, second]) => {
+	  if (!comb.hasOwnProperty(second)) comb[second] = [];
+	  comb[second].push(first);
+	  return comb;
 	}, {});
 
-	module.exports = byRecipe;
+	module.exports = allRecipes;
 
 
 /***/ }

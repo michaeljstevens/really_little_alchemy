@@ -11,7 +11,7 @@
 body{ background-color: ivory; }
 
 .wrapper {
-    border: 10px solid blue;
+    border: 10px solid black;
     top:10px;
     left:10px;
     width: 1000px;
@@ -20,21 +20,26 @@ body{ background-color: ivory; }
     background-color:white;
     position: relative;
     margin-top: 72px;
+    border-radius: 7px;
+    box-shadow: 2px 2px 10px black;
 }
 .vertical-scroll {
   border: 1px solid black;
+  border-radius: 10px;
   width: 20px;
   height: 236px;
   position: absolute;
   bottom: 5px;
   right: 7px;
+  box-shadow: 2px 2px 5px black;
 }
 .vertical-scroll div.bar {
     left:0px;
     top:0px;
     width: 20px;
-    background-color: blue;
+    background-color: black;
     height: 20px;
+    border-radius: 10px;
 }
 #bodyCanvas {
     left:0px;
@@ -48,8 +53,12 @@ body{ background-color: ivory; }
   padding: 10px;
   border-radius: 7px;
   font-size: 20px;
-  background: ivory;
-  border: 1px solid blue;
+  background: black;
+  font-family: fantasy;
+  color: white;
+  width: 150px;
+  box-shadow: 2px 2px 10px black;
+  transition: box-shadow 0.5s;
 }
 
 .cheat {
@@ -59,30 +68,35 @@ body{ background-color: ivory; }
   padding: 10px;
   border-radius: 7px;
   font-size: 20px;
-  background: ivory;
-  border: 1px solid blue;
+  background: black;
+  font-family: fantasy;
+  color: white;
+  width: 150px;
+  box-shadow: 2px 2px 10px black;
+  margin-top: 2px;
+  transition: box-shadow 0.5s;
 }
 
 .about:hover {
-  padding: 12px;
+  box-shadow: 2px 2px 20px black;
   cursor: pointer;
 }
 
 .cheat:hover {
-  padding: 12px;
+  box-shadow: 2px 2px 20px black;
   cursor: pointer;
 }
 
 .mute {
   height: 50px;
   position: absolute;
-  top: 120px;
+  top: 125px;
   right: 10px;
 }
 
 .mute:hover {
   cursor: pointer;
-  
+
 }
 
 .header {
